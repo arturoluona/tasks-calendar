@@ -1,10 +1,17 @@
 import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { Dashboard, Calendar } from '@/pages';
+import { NavBar } from '@/components';
 
 const App = () => {
   return (
-    <div className="text-3xl font-bold flex flex-col justify-center items-center h-full w-full">
-      Vite + React + Typescript
-    </div>
+    <>
+      <NavBar />
+      <Routes>
+        <Route path={'/'} element={<Dashboard />} />
+        <Route path={'/calendar'} element={<Calendar />} />
+      </Routes>
+    </>
   );
 };
 
