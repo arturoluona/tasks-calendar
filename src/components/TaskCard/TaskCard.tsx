@@ -11,11 +11,13 @@ import {
   Tooltip,
 } from '@mui/material';
 import React from 'react';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import WorkspacesIcon from '@mui/icons-material/Workspaces';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import {
+  ExpandMore as ExpandMoreIcon,
+  Workspaces as WorkspacesIcon,
+  RadioButtonChecked as RadioButtonCheckedIcon,
+  MoreVert as MoreVertIcon,
+  ExpandLess as ExpandLessIcon,
+} from '@mui/icons-material';
 import { PriorityEnum, StatusEnum, Task } from '@/models';
 import { shortDate } from '@/utils/dateUtil';
 
