@@ -7,7 +7,7 @@ module.exports = {
   extends: ['plugin:react/recommended', 'plugin:promise/recommended'],
   overrides: [
     {
-      files: ['*.tsx'],
+      files: ['*.tsx', '*.ts'],
       parserOptions: {
         project: ['tsconfig.json'],
       },
@@ -46,6 +46,57 @@ module.exports = {
         ],
         'no-console': 'error',
         semi: 'error',
+        "jsdoc/require-param-type": "off",
+        "jsdoc/require-property-type": "off",
+        "jsdoc/require-returns-type": "off", "jsdoc/check-alignment": "error",
+        "jsdoc/check-indentation": "error",
+        "jsdoc/check-param-names": "error",
+        "jsdoc/check-property-names": "error",
+        "jsdoc/check-syntax": "error",
+        "jsdoc/check-tag-names": "error",
+        "jsdoc/check-types": "error",
+        "jsdoc/check-values": "error",
+        "jsdoc/empty-tags": "error",
+        "jsdoc/implements-on-classes": "error",
+        "jsdoc/match-description": "error",
+        "jsdoc/newline-after-description": "error",
+        "jsdoc/no-bad-blocks": "warn",
+        "jsdoc/no-types": "error",
+        "jsdoc/require-description": "error",
+        "jsdoc/require-description-complete-sentence": "error",
+        "jsdoc/require-jsdoc": [
+          "error",
+          {
+            "publicOnly": false,
+            "require": {
+              "ClassDeclaration": true,
+              "FunctionDeclaration": true,
+              "MethodDefinition": true
+            },
+            "contexts": [
+              {
+                "context": "ClassProperty",
+                "inlineCommentBlock": true
+              },
+              {
+                "context": "TSPropertySignature",
+                "inlineCommentBlock": true
+              }
+            ],
+            "exemptEmptyFunctions": false,
+            "checkConstructors": false
+          }
+        ],
+        "jsdoc/require-param": "error",
+        "jsdoc/require-param-description": "error",
+        "jsdoc/require-param-name": "error",
+        "jsdoc/require-property": "error",
+        "jsdoc/require-property-description": "error",
+        "jsdoc/require-property-name": "error",
+        "jsdoc/require-returns": "error",
+        "jsdoc/require-returns-check": "error",
+        "jsdoc/require-returns-description": "error",
+        "jsdoc/require-yields-check": "error"
       },
     },
   ],

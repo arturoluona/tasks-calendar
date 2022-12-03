@@ -1,0 +1,66 @@
+:root {
+   --draft: #CBD5E1FF;
+   --to-do: #F87171FF;
+   --progress: #38BDF8FF;
+   --completed: #4ADE80FF;
+
+    --normal: #0ea5e9;
+    --low: #eab308;
+    --high: #f43f5e;
+    --high-next: #ef4444;
+}
+
+/*color text by status*/
+.text-draft {
+ color: var(--draft) !important;
+}
+
+.text-to-do {
+ color: var(--to-do) !important;
+}
+
+.text-progress {
+ color: var(--progress) !important;
+}
+
+.text-completed {
+ color: var(--completed) !important;
+}
+
+/*color text by priority*/
+.text-normal {
+    color: var(--normal) !important;
+}
+
+.text-low {
+    color: var(--low) !important;
+}
+
+.text-high {
+    color: var(--high) !important;
+}
+
+.text-high-next {
+    color: var(--high-next) !important;
+}
+
+/*Backgrounds by status*/
+.bg-draft {
+    background-color: var(--draft) !important;
+}
+
+.bg-draft {
+    background-color: var(--draft) !important;
+}
+
+.bg-to-do {
+    background-color: var(--to-do) !important;
+}
+
+.bg-progress {
+    background-color: var(--progress) !important;
+}
+
+.bg-completed {
+    background-color: var(--completed) !important;
+}

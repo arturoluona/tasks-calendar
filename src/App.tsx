@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Dashboard, Calendar } from '@/pages';
 import { NavBar } from '@/components';
+import './App.css';
 
 const App = () => {
   return (
