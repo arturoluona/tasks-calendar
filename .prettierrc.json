@@ -1,11 +1,4 @@
 {
   "singleQuote": true,
-  "overrides": [
-    {
-      "files": ["**/*.scss", "**/*.css"],
-      "options": {
-        "singleQuote": true
-      }
-    }
-  ]
+  "overrides": []
 }

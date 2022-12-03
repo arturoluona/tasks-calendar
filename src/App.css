@@ -64,3 +64,22 @@
 .bg-completed {
   background-color: var(--completed) !important;
 }
+
+.scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  @apply bg-transparent;
+}
+
+.scrollbar:hover::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  @apply bg-gray-300
+}

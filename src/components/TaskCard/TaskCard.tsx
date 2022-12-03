@@ -18,8 +18,8 @@ import {
   MoreVert as MoreVertIcon,
   ExpandLess as ExpandLessIcon,
 } from '@mui/icons-material';
-import { PriorityEnum, StatusEnum, Task } from '@/models';
-import { shortDate } from '@/utils/dateUtil';
+import { Task } from '@/models';
+import { shortDate, getNameByEnum } from '@/utils';
 
 /** Interface props. */
 interface TaskCardProps {
@@ -36,16 +36,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }): React.ReactElement => {
   };
 
   /**
-   * Parse enum to get name.
-   *
-   * @param enums The enum to be parsed.
-   * @returns String with name of enum.
-   */
-  function getNameByEnum(enums: PriorityEnum | StatusEnum): string {
-    return enums.split('-').join(' ').toUpperCase();
-  }
-
-  /**
    * Parse name of task to get initials.
    *
    * @returns String with name of enum.
@@ -56,7 +46,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }): React.ReactElement => {
   }
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card className="border">
       <CardHeader
         avatar={
           <Avatar className={'bg-' + task.status} aria-label="recipe">
@@ -71,7 +61,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }): React.ReactElement => {
       <CardContent>
         <Collapse
           in={isShowMore}
-          collapsedSize={50}
+          collapsedSize={40}
           className="text-sm text-gray-600"
         >
           {task.description}
@@ -94,12 +84,16 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }): React.ReactElement => {
               </IconButton>
             </Tooltip>
           </div>
-          <Tooltip title={isShowMore ? 'less description' : 'see description'}>
-            <IconButton onClick={toggleExpandClick}>
-              {!isShowMore && <ExpandMoreIcon />}
-              {isShowMore && <ExpandLessIcon />}
-            </IconButton>
-          </Tooltip>
+          {task.description.length > 55 && (
+            <Tooltip
+              title={isShowMore ? 'less description' : 'see description'}
+            >
+              <IconButton onClick={toggleExpandClick}>
+                {!isShowMore && <ExpandMoreIcon />}
+                {isShowMore && <ExpandLessIcon />}
+              </IconButton>
+            </Tooltip>
+          )}
         </div>
       </CardActions>
     </Card>
