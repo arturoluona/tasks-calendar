@@ -81,5 +81,5 @@
 
 .scrollbar:hover::-webkit-scrollbar-thumb {
   border-radius: 5px;
-  @apply bg-gray-300
+  @apply bg-gray-300;
 }
