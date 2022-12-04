@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import {
   AddCircleOutlineOutlined as AddCircleOutlineOutlinedIcon,
-  Workspaces as WorkspacesIcon,
   CloseOutlined as CloseOutlinedIcon,
 } from '@mui/icons-material';
 import { SxProps } from '@mui/system';
@@ -78,7 +77,9 @@ const AddTaskBtnModal: React.FC = (): React.ReactElement => {
             <CardContent>This its content</CardContent>
           </div>
           <CardActions sx={styleActions}>
-            <Button variant="outlined">Cancel</Button>
+            <Button variant="outlined" onClick={toggleModal}>
+              Cancel
+            </Button>
             <Button variant="contained">Save</Button>
           </CardActions>
         </Card>
