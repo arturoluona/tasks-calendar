@@ -49,16 +49,20 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }): React.ReactElement => {
     <Card className="border">
       <CardHeader
         avatar={
-          <Avatar className={'bg-' + task.status} aria-label="recipe">
+          <Avatar className={'mr-[-5px] bg-' + task.status} aria-label="recipe">
             {getInitialsAvatar()}
           </Avatar>
         }
         action={<MenuCard />}
-        className="pb-0"
+        className="pb-0 truncate"
         title={task.name}
-        subheader={shortDate(task.date)}
+        subheader={
+          <span className="text-xs w-[20px] truncate">
+            {shortDate(task.date)}
+          </span>
+        }
       />
-      <CardContent>
+      <CardContent className="pb-0">
         <Collapse
           in={isShowMore}
           collapsedSize={40}
