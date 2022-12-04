@@ -12,14 +12,14 @@ import {
 } from '@mui/material';
 import React from 'react';
 import {
-  ExpandMore as ExpandMoreIcon,
-  Workspaces as WorkspacesIcon,
-  RadioButtonChecked as RadioButtonCheckedIcon,
-  MoreVert as MoreVertIcon,
   ExpandLess as ExpandLessIcon,
+  ExpandMore as ExpandMoreIcon,
+  MoreVert as MoreVertIcon,
+  RadioButtonChecked as RadioButtonCheckedIcon,
+  Workspaces as WorkspacesIcon,
 } from '@mui/icons-material';
-import { Task } from '@/models';
-import { shortDate, getNameByEnum } from '@/utils';
+import { StatusEnum, Task } from '@/models';
+import { getNameByEnum, shortDate } from '@/utils';
 
 /** Interface props. */
 interface TaskCardProps {
@@ -53,7 +53,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }): React.ReactElement => {
             {getInitialsAvatar()}
           </Avatar>
         }
-        action={<MenuCard />}
+        action={<MenuCard task={task} />}
         className="pb-0 truncate"
         title={task.name}
         subheader={
@@ -74,11 +74,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }): React.ReactElement => {
       <CardActions disableSpacing>
         <div className="flex justify-between items-center w-full">
           <div>
-            <Tooltip title={getNameByEnum(task.status)}>
-              <IconButton aria-label="status" className={'text-' + task.status}>
-                <RadioButtonCheckedIcon />
-              </IconButton>
-            </Tooltip>
+            <MenuStatus task={task} />
             <Tooltip title={getNameByEnum(task.priority)}>
               <IconButton
                 aria-label="priority"
@@ -104,7 +100,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }): React.ReactElement => {
   );
 };
 
-const MenuCard: React.FC = (): React.ReactElement => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const MenuStatus: React.FC<TaskCardProps> = ({ task }): React.ReactElement => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -115,23 +112,76 @@ const MenuCard: React.FC = (): React.ReactElement => {
   };
   return (
     <>
-      <IconButton
-        aria-label="settings"
-        id="basic-button"
-        aria-controls={open ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-      >
-        <MoreVertIcon />
-      </IconButton>
+      <Tooltip title={getNameByEnum(task.status)}>
+        <IconButton
+          aria-label="status"
+          id="menu-status-btn"
+          aria-controls={open ? 'menu-status' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          className={'text-' + task.status}
+          onClick={handleClick}
+        >
+          <RadioButtonCheckedIcon />
+        </IconButton>
+      </Tooltip>
       <Menu
-        id="basic-menu"
+        id="menu-status"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          'aria-labelledby': 'basic-button',
+          'aria-labelledby': 'menu-status',
+        }}
+      >
+        <MenuItem onClick={handleClose}>
+          {getNameByEnum(StatusEnum.Draft)}
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          {getNameByEnum(StatusEnum.Todo)}
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          {getNameByEnum(StatusEnum.Progress)}
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          {getNameByEnum(StatusEnum.Completed)}
+        </MenuItem>
+      </Menu>
+    </>
+  );
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const MenuCard: React.FC<TaskCardProps> = ({ task }): React.ReactElement => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  return (
+    <>
+      <Tooltip title="Options">
+        <IconButton
+          aria-label="settings"
+          id="menu-settings-btn"
+          aria-controls={open ? 'menu-settings' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={handleClick}
+        >
+          <MoreVertIcon />
+        </IconButton>
+      </Tooltip>
+      <Menu
+        id="menu-settings"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'menu-settings',
         }}
       >
         <MenuItem onClick={handleClose}>Edit</MenuItem>

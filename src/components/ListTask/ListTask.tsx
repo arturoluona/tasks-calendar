@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { isMobile } from 'react-device-detect';
 import { Collapse } from '@mui/material';
 import { TaskCard } from '@/components';
 import { StatusEnum, Task } from '@/models';
@@ -9,12 +8,18 @@ import {
   ExpandMore as ExpandMoreIcon,
 } from '@mui/icons-material';
 
-/** Interface props. */
+/** Interface props ListTask. */
 interface ListTaskProps {
   /** List tasks to render. */
   tasks: Task[];
   /** Status of list tasks. */
   status: StatusEnum;
+}
+
+/** Interface props ContentListTask. */
+interface ContentListTaskProps {
+  /** List tasks to render. */
+  tasks: Task[];
 }
 
 const ListTask: React.FC<ListTaskProps> = ({
@@ -25,49 +30,70 @@ const ListTask: React.FC<ListTaskProps> = ({
 
   /** Toggle expand list tasks only for mobile. */
   const toggleListMobile = () => {
-    isMobile && setExpanded(!isExpanded);
+    setExpanded(!isExpanded);
   };
 
   return (
     <div className="w-full sm:min-w-[240px] sm:w-1/4 h-full sm:h-[calc(100vh-100px)]">
+      {/*Desktop header*/}
+      <div
+        className={
+          'hidden sm:block rounded-t-lg text-center w-full p-2 bg-' + status
+        }
+      >
+        {getNameByEnum(status)}
+      </div>
+      {/*Mobil header*/}
       <div
         onClick={toggleListMobile}
         className={
-          (isMobile
-            ? (isExpanded ? 'rounded-t-lg ' : 'rounded-lg ') +
-              'text-left flex justify-between '
-            : 'rounded-t-lg text-center ') +
-          'w-full p-2 bg-' +
+          (isExpanded ? 'rounded-t-lg ' : 'rounded-lg ') +
+          'block sm:hidden text-left flex justify-between w-full p-2 cursor-pointer bg-' +
           status
         }
       >
         {getNameByEnum(status)}
-        {isMobile && (
-          <>
-            {!isExpanded && <ExpandMoreIcon />}
-            {isExpanded && <ExpandLessIcon />}
-          </>
-        )}
+        <div className="text-gray-500">
+          {!isExpanded && <ExpandMoreIcon />}
+          {isExpanded && <ExpandLessIcon />}
+        </div>
       </div>
+      {/*Mobile content*/}
       <Collapse
-        in={(isMobile && isExpanded) || !isMobile}
+        in={isExpanded}
         className={
-          (isMobile ? 'mb-2 ' : 'h-[calc(100%-45px)] ') +
-          'border border-gray-300 border-t-0 rounded-b-lg p-2 overflow-auto scrollbar'
+          'block sm:hidden mb-2 border border-gray-300 border-t-0 rounded-b-lg p-2'
         }
       >
-        {tasks &&
-          tasks.length &&
-          tasks.map((task) => (
-            <div className="my-2" key={task.id}>
-              <TaskCard task={task} />
-            </div>
-          ))}
-        {((tasks && !tasks.length) || !tasks) && (
-          <p className="text-center text-sm">There are no tasks to list.</p>
-        )}
+        <ContentListTask tasks={tasks} />
       </Collapse>
+      {/*Desktop content*/}
+      <div
+        className={
+          'hidden sm:block h-[calc(100%-45px)] border border-gray-300 border-t-0 rounded-b-lg p-2 overflow-auto scrollbar'
+        }
+      >
+        <ContentListTask tasks={tasks} />
+      </div>
     </div>
+  );
+};
+
+const ContentListTask: React.FC<ContentListTaskProps> = ({
+  tasks,
+}): React.ReactElement => {
+  return (
+    <>
+      {tasks && tasks.length ? (
+        tasks.map((task) => (
+          <div className="my-2" key={task.id}>
+            <TaskCard task={task} />
+          </div>
+        ))
+      ) : (
+        <p className="text-center text-sm py-5">There are no tasks to list.</p>
+      )}
+    </>
   );
 };
 

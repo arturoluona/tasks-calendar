@@ -25,7 +25,7 @@ const tasks: Task[] = [
       'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non, vitae.',
     date: '2022-12-03T19:55:27.002Z',
     id: '3',
-    status: StatusEnum.Progress,
+    status: StatusEnum.Completed,
     priority: PriorityEnum.High,
   },
   {
