@@ -4,39 +4,13 @@ import {
   FormControl,
   InputAdornment,
   Input,
-  IconButton,
-  Tooltip,
-  Modal,
-  Box,
 } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  SearchRounded as SearchRoundedIcon,
-  AddCircleOutlineOutlined as AddCircleOutlineOutlinedIcon,
-} from '@mui/icons-material';
+import { SearchRounded as SearchRoundedIcon } from '@mui/icons-material';
+import { AddTaskBtnModal } from '@/components';
 
 const NavBar = () => {
-  const [isModalAddCard, setModalAddCard] = React.useState(false);
-
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-    pt: 2,
-    px: 4,
-    pb: 3,
-  };
-
-  /** Toggle hide or show modal. */
-  const toggleModal = () => {
-    setModalAddCard(!isModalAddCard);
-  };
-
   return (
     <>
       <AppBar position="static" className={'bg-blue-500'}>
@@ -70,31 +44,10 @@ const NavBar = () => {
                 }
               />
             </FormControl>
-            <Tooltip title="Add new task">
-              <IconButton
-                aria-label="add task"
-                className="text-white"
-                onClick={toggleModal}
-              >
-                <AddCircleOutlineOutlinedIcon />
-              </IconButton>
-            </Tooltip>
+            <AddTaskBtnModal />
           </div>
         </div>
       </AppBar>
-      <Modal
-        open={isModalAddCard}
-        onClose={toggleModal}
-        aria-labelledby="child-modal-title"
-        aria-describedby="child-modal-description"
-      >
-        <Box sx={{ ...style, width: 600 }}>
-          <h2 id="child-modal-title">Text in a child modal</h2>
-          <p id="child-modal-description">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          </p>
-        </Box>
-      </Modal>
     </>
   );
 };
