@@ -5,44 +5,49 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  FormControl,
   IconButton,
+  InputLabel,
+  MenuItem,
   Modal,
+  Select,
+  TextField,
   Tooltip,
 } from '@mui/material';
 import {
   AddCircleOutlineOutlined as AddCircleOutlineOutlinedIcon,
   CloseOutlined as CloseOutlinedIcon,
 } from '@mui/icons-material';
-import { SxProps } from '@mui/system';
+import { FormikHelpers, useFormik } from 'formik';
+import { PriorityEnum, StatusEnum, Task } from '@/models';
+import { getNameByEnum } from '@/utils';
+import {
+  StyleActions,
+  StyleCard,
+  StyleFields,
+} from '@/components/AddTaskBtnModal/AddTaskBtnModal.style';
 
 const AddTaskBtnModal: React.FC = (): React.ReactElement => {
   const [isModalAddCard, setModalAddCard] = React.useState(false);
 
-  const styleCard: SxProps = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    minWidth: '40%',
-    maxWidth: '95%',
-    maxHeight: '95%',
-    minHeight: '60%',
-    bgcolor: 'background.paper',
-    borderRadius: 4,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    p: 1,
+  const saveTask = (values: Task, actions: FormikHelpers<Task>) => {
+    console.log({ values, actions });
   };
 
-  const styleActions: SxProps = {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'end',
-  };
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      description: '',
+      date: new Date().toISOString(),
+      status: StatusEnum.Draft,
+      priority: PriorityEnum.Low,
+    } as Task,
+    onSubmit: saveTask,
+  });
 
   /** Toggle hide or show modal. */
   const toggleModal = () => {
+    formik.resetForm();
     setModalAddCard(!isModalAddCard);
   };
 
@@ -63,7 +68,7 @@ const AddTaskBtnModal: React.FC = (): React.ReactElement => {
         aria-labelledby="child-modal-title"
         aria-describedby="child-modal-description"
       >
-        <Card sx={styleCard}>
+        <Card sx={StyleCard}>
           <div>
             <CardHeader
               sx={{ pb: 0 }}
@@ -74,13 +79,110 @@ const AddTaskBtnModal: React.FC = (): React.ReactElement => {
               }
               title={<h3>Add new task</h3>}
             />
-            <CardContent>This its content</CardContent>
+            <CardContent>
+              <form onSubmit={formik.handleSubmit}>
+                <TextField
+                  sx={StyleFields}
+                  fullWidth
+                  autoComplete="off"
+                  required
+                  id="name"
+                  label="Title"
+                  size="small"
+                  placeholder="Take the dog out"
+                  value={formik.values.name}
+                  onChange={formik.handleChange}
+                />
+                <TextField
+                  sx={StyleFields}
+                  fullWidth
+                  autoComplete="off"
+                  multiline
+                  required
+                  rows={4}
+                  id="description"
+                  label="Description"
+                  size="small"
+                  placeholder="Description"
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
+                />
+                <TextField
+                  sx={StyleFields}
+                  fullWidth
+                  required
+                  type="date"
+                  id="date"
+                  label="Date"
+                  size="small"
+                  value={formik.values.date}
+                  onChange={formik.handleChange}
+                />
+                <FormControl fullWidth>
+                  <InputLabel id="status-label">Status</InputLabel>
+                  <Select
+                    sx={StyleFields}
+                    fullWidth
+                    required
+                    name="status"
+                    labelId="status-label"
+                    id="status"
+                    label="Status"
+                    size="small"
+                    value={formik.values.status}
+                    onChange={formik.handleChange}
+                  >
+                    <MenuItem value={StatusEnum.Draft}>
+                      {getNameByEnum(StatusEnum.Draft)}
+                    </MenuItem>
+                    <MenuItem value={StatusEnum.Todo}>
+                      {getNameByEnum(StatusEnum.Todo)}
+                    </MenuItem>
+                    <MenuItem value={StatusEnum.Progress}>
+                      {getNameByEnum(StatusEnum.Progress)}
+                    </MenuItem>
+                    <MenuItem value={StatusEnum.Completed}>
+                      {getNameByEnum(StatusEnum.Completed)}
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+                <FormControl fullWidth>
+                  <InputLabel id="priority-label">Priority</InputLabel>
+                  <Select
+                    size="small"
+                    fullWidth
+                    sx={StyleFields}
+                    labelId="priority-label"
+                    name="priority"
+                    id="priority"
+                    label="Priority"
+                    value={formik.values.priority}
+                    onChange={formik.handleChange}
+                  >
+                    <MenuItem value={PriorityEnum.Low}>
+                      {getNameByEnum(PriorityEnum.Low)}
+                    </MenuItem>
+                    <MenuItem value={PriorityEnum.Normal}>
+                      {getNameByEnum(PriorityEnum.Normal)}
+                    </MenuItem>
+                    <MenuItem value={PriorityEnum.High}>
+                      {getNameByEnum(PriorityEnum.High)}
+                    </MenuItem>
+                    <MenuItem value={PriorityEnum.HighNext}>
+                      {getNameByEnum(PriorityEnum.HighNext)}
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </form>
+            </CardContent>
           </div>
-          <CardActions sx={styleActions}>
+          <CardActions sx={StyleActions}>
             <Button variant="outlined" onClick={toggleModal}>
               Cancel
             </Button>
-            <Button variant="contained">Save</Button>
+            <Button onClick={formik.submitForm} variant="contained">
+              Save
+            </Button>
           </CardActions>
         </Card>
       </Modal>

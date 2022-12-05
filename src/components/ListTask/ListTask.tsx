@@ -1,26 +1,12 @@
 import React, { useState } from 'react';
 import { Collapse } from '@mui/material';
-import { TaskCard } from '@/components';
-import { StatusEnum, Task } from '@/models';
+import { ContentListTask } from '@/components';
+import { ListTaskProps } from '@/models';
 import { getNameByEnum } from '@/utils';
 import {
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
 } from '@mui/icons-material';
-
-/** Interface props ListTask. */
-interface ListTaskProps {
-  /** List tasks to render. */
-  tasks: Task[];
-  /** Status of list tasks. */
-  status: StatusEnum;
-}
-
-/** Interface props ContentListTask. */
-interface ContentListTaskProps {
-  /** List tasks to render. */
-  tasks: Task[];
-}
 
 const ListTask: React.FC<ListTaskProps> = ({
   tasks,
@@ -76,24 +62,6 @@ const ListTask: React.FC<ListTaskProps> = ({
         <ContentListTask tasks={tasks} />
       </div>
     </div>
-  );
-};
-
-const ContentListTask: React.FC<ContentListTaskProps> = ({
-  tasks,
-}): React.ReactElement => {
-  return (
-    <>
-      {tasks && tasks.length ? (
-        tasks.map((task) => (
-          <div className="my-2" key={task.id}>
-            <TaskCard task={task} />
-          </div>
-        ))
-      ) : (
-        <p className="text-center text-sm py-5">There are no tasks to list.</p>
-      )}
-    </>
   );
 };
 
