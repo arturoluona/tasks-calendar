@@ -18,6 +18,7 @@ import {
   AddCircleOutlineOutlined as AddCircleOutlineOutlinedIcon,
   CloseOutlined as CloseOutlinedIcon,
 } from '@mui/icons-material';
+import * as yup from 'yup';
 import { FormikHelpers, useFormik } from 'formik';
 import { PriorityEnum, StatusEnum, Task } from '@/models';
 import { getNameByEnum } from '@/utils';
@@ -26,6 +27,14 @@ import {
   StyleCard,
   StyleFields,
 } from '@/components/AddTaskBtnModal/AddTaskBtnModal.style';
+import { LocalizationProvider, MobileDatePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+
+const validationSchema = yup.object({
+  name: yup.string().required('Title is required'),
+  description: yup.string().required('Description is required'),
+});
 
 const AddTaskBtnModal: React.FC = (): React.ReactElement => {
   const [isModalAddCard, setModalAddCard] = React.useState(false);
@@ -37,10 +46,11 @@ const AddTaskBtnModal: React.FC = (): React.ReactElement => {
     initialValues: {
       name: '',
       description: '',
-      date: new Date().toISOString(),
+      date: dayjs(new Date()),
       status: StatusEnum.Draft,
       priority: PriorityEnum.Low,
     } as Task,
+    validationSchema,
     onSubmit: saveTask,
   });
 
@@ -84,20 +94,20 @@ const AddTaskBtnModal: React.FC = (): React.ReactElement => {
                   sx={StyleFields}
                   fullWidth
                   autoComplete="off"
-                  required
                   id="name"
                   label="Title"
                   size="small"
                   placeholder="Take the dog out"
                   value={formik.values.name}
                   onChange={formik.handleChange}
+                  error={formik.touched.name && Boolean(formik.errors.name)}
+                  helperText={formik.touched.name && formik.errors.name}
                 />
                 <TextField
                   sx={StyleFields}
                   fullWidth
                   autoComplete="off"
                   multiline
-                  required
                   rows={4}
                   id="description"
                   label="Description"
@@ -105,24 +115,37 @@ const AddTaskBtnModal: React.FC = (): React.ReactElement => {
                   placeholder="Description"
                   value={formik.values.description}
                   onChange={formik.handleChange}
+                  error={
+                    formik.touched.description &&
+                    Boolean(formik.errors.description)
+                  }
+                  helperText={
+                    formik.touched.description && formik.errors.description
+                  }
                 />
-                <TextField
-                  sx={StyleFields}
-                  fullWidth
-                  required
-                  type="date"
-                  id="date"
-                  label="Date"
-                  size="small"
-                  value={formik.values.date}
-                  onChange={formik.handleChange}
-                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <MobileDatePicker
+                    label="Date"
+                    inputFormat="MM/DD/YYYY"
+                    value={formik.values.date}
+                    onChange={(date) =>
+                      formik.setFieldValue('date', date?.toLocaleString())
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        sx={StyleFields}
+                        fullWidth
+                        size="small"
+                        {...params}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
                 <FormControl fullWidth>
                   <InputLabel id="status-label">Status</InputLabel>
                   <Select
                     sx={StyleFields}
                     fullWidth
-                    required
                     name="status"
                     labelId="status-label"
                     id="status"

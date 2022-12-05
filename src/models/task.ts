@@ -1,4 +1,5 @@
 import { PriorityEnum, StatusEnum } from '@/models';
+import { Dayjs } from 'dayjs';
 
 /** Task interface. */
 export interface Task {
@@ -9,7 +10,7 @@ export interface Task {
   /** Description of task. */
   description: string;
   /** Created date of task. */
-  date: string;
+  date: string | Date | Dayjs;
   /** Status of task. */
   status: StatusEnum;
   /** Priority of task. */
