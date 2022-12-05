@@ -30,9 +30,8 @@ import {
 const AddTaskBtnModal: React.FC = (): React.ReactElement => {
   const [isModalAddCard, setModalAddCard] = React.useState(false);
 
-  const saveTask = (values: Task, actions: FormikHelpers<Task>) => {
-    console.log({ values, actions });
-  };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
+  const saveTask = (values: Task, actions: FormikHelpers<Task>) => {};
 
   const formik = useFormik({
     initialValues: {
