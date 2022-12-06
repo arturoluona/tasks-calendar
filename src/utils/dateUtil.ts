@@ -1,3 +1,5 @@
+import { Dayjs } from 'dayjs';
+
 /**
  * Get date parsed in a short date.
  *

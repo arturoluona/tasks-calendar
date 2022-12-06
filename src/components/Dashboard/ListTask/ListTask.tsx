@@ -7,11 +7,14 @@ import {
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
 } from '@mui/icons-material';
+import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable';
+import { useDroppable } from '@dnd-kit/core';
 
 const ListTask: React.FC<ListTaskProps> = ({
   tasks,
   status,
 }): React.ReactElement => {
+  const { setNodeRef } = useDroppable({ id: status });
   const [isExpanded, setExpanded] = useState(false);
 
   /** Toggle expand list tasks only for mobile. */
@@ -54,12 +57,21 @@ const ListTask: React.FC<ListTaskProps> = ({
         <ContentListTask tasks={tasks} />
       </Collapse>
       {/*Desktop content*/}
-      <div
-        className={
-          'hidden sm:block h-[calc(100%-45px)] border border-gray-300 border-t-0 rounded-b-lg p-2 overflow-auto scrollbar'
-        }
-      >
-        <ContentListTask tasks={tasks} />
+      <div className="hidden sm:block h-[calc(100%-45px)]">
+        <SortableContext
+          id={status}
+          items={tasks}
+          strategy={rectSortingStrategy}
+        >
+          <div
+            ref={setNodeRef}
+            className={
+              'h-full border border-gray-300 border-t-0 rounded-b-lg p-2 overflow-auto scrollbar'
+            }
+          >
+            <ContentListTask tasks={tasks} />
+          </div>
+        </SortableContext>
       </div>
     </div>
   );

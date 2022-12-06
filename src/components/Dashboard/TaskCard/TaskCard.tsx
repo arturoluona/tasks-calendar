@@ -13,13 +13,31 @@ import {
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
   Workspaces as WorkspacesIcon,
+  ZoomOutMap as ZoomOutMapIcon,
 } from '@mui/icons-material';
 import { BasicCardProps } from '@/models';
 import { getNameByEnum, shortDate } from '@/utils';
 import { OptionsTask, OptionsStatus } from '@/components';
+import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/sortable';
 
 const TaskCard: React.FC<BasicCardProps> = ({ task }): React.ReactElement => {
   const [isShowMore, setShowMore] = React.useState<boolean>(false);
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: task.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: 10,
+  };
 
   /** Show or hide description. */
   const toggleExpandClick = () => {
@@ -37,7 +55,7 @@ const TaskCard: React.FC<BasicCardProps> = ({ task }): React.ReactElement => {
   }
 
   return (
-    <Card className="border">
+    <Card className="border" style={style} ref={setNodeRef} {...attributes}>
       <CardHeader
         avatar={
           <Avatar className={'mr-[-5px] bg-' + task.status} aria-label="recipe">
@@ -49,7 +67,7 @@ const TaskCard: React.FC<BasicCardProps> = ({ task }): React.ReactElement => {
         title={task.name}
         subheader={
           <span className="text-xs w-[20px] truncate">
-            {shortDate(task.date)}
+            {shortDate(task.date as string)}
           </span>
         }
       />
@@ -75,16 +93,26 @@ const TaskCard: React.FC<BasicCardProps> = ({ task }): React.ReactElement => {
               </IconButton>
             </Tooltip>
           </div>
-          {task.description.length > 55 && (
-            <Tooltip
-              title={isShowMore ? 'less description' : 'see description'}
-            >
-              <IconButton onClick={toggleExpandClick}>
-                {!isShowMore && <ExpandMoreIcon />}
-                {isShowMore && <ExpandLessIcon />}
-              </IconButton>
-            </Tooltip>
-          )}
+          <div className="flex ">
+            <div className="hidden sm:block">
+              <Tooltip title="Move task">
+                <IconButton {...listeners}>
+                  <ZoomOutMapIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+
+            {task.description.length > 55 && (
+              <Tooltip
+                title={isShowMore ? 'less description' : 'see description'}
+              >
+                <IconButton onClick={toggleExpandClick}>
+                  {!isShowMore && <ExpandMoreIcon />}
+                  {isShowMore && <ExpandLessIcon />}
+                </IconButton>
+              </Tooltip>
+            )}
+          </div>
         </div>
       </CardActions>
     </Card>
