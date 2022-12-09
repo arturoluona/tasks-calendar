@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ListTask, TaskCard } from '@/components';
 import { tasks } from '@/utils';
-import { StatusEnum, Task } from '@/models';
+import { StatusEnum, Task, TasksByStatus } from '@/models';
 import {
   DndContext,
   DragOverEvent,
@@ -17,8 +17,14 @@ import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { DragEndEvent } from '@dnd-kit/core/dist/types';
 
 const Dashboard = () => {
-  const [listTask, setListTask] = useState<Task[]>(tasks);
-  const [activeIndex, setActiveIndex] = useState<string | number | null>(null);
+  const [listTask, setListTask] = useState<TasksByStatus>({
+    [StatusEnum.Draft]: [],
+    [StatusEnum.Todo]: [],
+    [StatusEnum.Progress]: [],
+    [StatusEnum.Completed]: [],
+  });
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+
   const sensors = useSensors(
     useSensor(MouseSensor),
     useSensor(TouchSensor),
@@ -27,10 +33,36 @@ const Dashboard = () => {
     })
   );
 
-  const handleDragStart = ({ active }: DragStartEvent) =>
-    setActiveIndex(active.id);
+  const setParsedTasks = () => {
+    setListTask({
+      [StatusEnum.Draft]: tasks.filter(
+        (task) => task.status === StatusEnum.Draft
+      ),
+      [StatusEnum.Todo]: tasks.filter(
+        (task) => task.status === StatusEnum.Todo
+      ),
+      [StatusEnum.Progress]: tasks.filter(
+        (task) => task.status === StatusEnum.Progress
+      ),
+      [StatusEnum.Completed]: tasks.filter(
+        (task) => task.status === StatusEnum.Completed
+      ),
+    });
+  };
 
-  const handleDragCancel = () => setActiveIndex(null);
+  useEffect(() => {
+    setParsedTasks();
+  }, [tasks]);
+
+  const handleDragStart = ({ active }: DragStartEvent) => {
+    const activeContainer = active?.data?.current?.sortable?.containerId;
+    const task: Task | undefined = listTask[activeContainer as StatusEnum].find(
+      ({ id }) => id === active.id
+    );
+    task && setActiveTask(task);
+  };
+
+  const handleDragCancel = () => setActiveTask(null);
 
   const handleDragOver = ({ active, over }: DragOverEvent) => {
     const overId = over?.id;
@@ -39,44 +71,74 @@ const Dashboard = () => {
     }
     const activeContainer = active?.data?.current?.sortable?.containerId;
     const overContainer = over?.data?.current?.sortable?.containerId || over.id;
+    const activeIndex = active?.data?.current?.sortable?.index;
+    const overIndex =
+      over.id in listTask
+        ? listTask[overContainer as StatusEnum].length + 1
+        : over?.data?.current?.sortable?.index;
+
     activeContainer !== overContainer &&
-      moveBetweenContainers(active?.id || '', overContainer);
+      moveBetweenContainers(
+        activeContainer,
+        activeIndex,
+        overContainer,
+        overIndex
+      );
   };
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (!over) {
-      setActiveIndex(null);
+      setActiveTask(null);
       return;
     }
     if (active.id !== over.id) {
       const activeContainer = active?.data?.current?.sortable.containerId;
       const overContainer =
         over?.data?.current?.sortable.containerId || over.id;
-      const activeId = active?.data?.current?.sortable.index;
-      const overIndex = over?.data?.current?.sortable.index;
-      const index = listTask.findIndex(({ id }) => id === activeId);
+      const activeIndex = active?.data?.current?.sortable.index;
+      const overIndex =
+        over.id in listTask
+          ? listTask[overContainer as StatusEnum].length + 1
+          : over?.data?.current?.sortable?.index;
+
       if (activeContainer === overContainer) {
-        setListTask(arrayMove(listTask, index, overIndex));
+        setListTask({
+          ...listTask,
+          [overContainer as StatusEnum]: arrayMove(
+            listTask[overContainer as StatusEnum],
+            activeIndex,
+            overIndex
+          ),
+        });
       } else {
-        moveBetweenContainers(active?.id || '', overContainer);
+        moveBetweenContainers(
+          activeContainer,
+          activeIndex,
+          overContainer,
+          overIndex
+        );
       }
     }
-    setActiveIndex(null);
+    setActiveTask(null);
   };
 
   const moveBetweenContainers = (
-    activeId: string | number,
-    overContainer: StatusEnum
+    activeContainer: StatusEnum,
+    activeIndex: number,
+    overContainer: StatusEnum,
+    overId: number
   ) => {
-    setListTask((tasksList) => {
-      const index = tasksList.findIndex(({ id }) => id === activeId);
-      const task: Task = tasksList[index];
-      task.status = overContainer;
-      return [
-        ...tasksList.slice(0, index),
-        task,
-        ...tasksList.slice(index + 1),
-      ];
+    setListTask({
+      ...listTask,
+      [activeContainer]: [
+        ...listTask[activeContainer].slice(0, activeIndex),
+        ...listTask[activeContainer].slice(activeIndex + 1),
+      ],
+      [overContainer]: [
+        ...listTask[overContainer].slice(0, overId),
+        { ...activeTask, status: overContainer },
+        ...listTask[overContainer].slice(overId),
+      ],
     });
   };
 
@@ -90,31 +152,20 @@ const Dashboard = () => {
     >
       <div className=" flex flex-col sm:flex-row gap-0 sm:gap-3 h-full p-5 scrollbar overflow-x-auto overflow-y-hidden">
         <ListTask
-          tasks={listTask.filter((task) => task.status === StatusEnum.Draft)}
+          tasks={listTask[StatusEnum.Draft]}
           status={StatusEnum.Draft}
         />
+        <ListTask tasks={listTask[StatusEnum.Todo]} status={StatusEnum.Todo} />
         <ListTask
-          tasks={listTask.filter((task) => task.status === StatusEnum.Todo)}
-          status={StatusEnum.Todo}
-        />
-        <ListTask
-          tasks={listTask.filter((task) => task.status === StatusEnum.Progress)}
+          tasks={listTask[StatusEnum.Progress]}
           status={StatusEnum.Progress}
         />
         <ListTask
-          tasks={listTask.filter(
-            (task) => task.status === StatusEnum.Completed
-          )}
+          tasks={listTask[StatusEnum.Completed]}
           status={StatusEnum.Completed}
         />
       </div>
-      <DragOverlay>
-        {activeIndex ? (
-          <TaskCard
-            task={listTask.find(({ id }) => id === activeIndex) as Task}
-          />
-        ) : null}
-      </DragOverlay>
+      <DragOverlay>{activeTask && <TaskCard task={activeTask} />}</DragOverlay>
     </DndContext>
   );
 };
