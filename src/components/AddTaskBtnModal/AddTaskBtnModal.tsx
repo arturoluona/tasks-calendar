@@ -30,6 +30,8 @@ import {
 import { LocalizationProvider, MobileDatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import { useDispatch } from 'react-redux';
+import { addTask } from '@/redux/states/task';
 
 const validationSchema = yup.object({
   name: yup.string().required('Title is required'),
@@ -37,10 +39,18 @@ const validationSchema = yup.object({
 });
 
 const AddTaskBtnModal: React.FC = (): React.ReactElement => {
+  const dispatch = useDispatch();
   const [isModalAddCard, setModalAddCard] = React.useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
-  const saveTask = (values: Task, actions: FormikHelpers<Task>) => {};
+  const saveTask = (task: Task, actions: FormikHelpers<Task>) => {
+    dispatch(
+      addTask({
+        ...task,
+        date: task.date?.toLocaleString(),
+      })
+    );
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -128,9 +138,7 @@ const AddTaskBtnModal: React.FC = (): React.ReactElement => {
                     label="Date"
                     inputFormat="MM/DD/YYYY"
                     value={formik.values.date}
-                    onChange={(date) =>
-                      formik.setFieldValue('date', date?.toLocaleString())
-                    }
+                    onChange={(date) => formik.setFieldValue('date', date)}
                     renderInput={(params) => (
                       <TextField
                         sx={StyleFields}

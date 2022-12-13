@@ -16,7 +16,7 @@ import {
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { DragEndEvent } from '@dnd-kit/core/dist/types';
 
-const Dashboard = () => {
+const Dashboard: React.FC = (): React.ReactElement => {
   const [listTask, setListTask] = useState<TasksByStatus>({
     [StatusEnum.Draft]: [],
     [StatusEnum.Todo]: [],
