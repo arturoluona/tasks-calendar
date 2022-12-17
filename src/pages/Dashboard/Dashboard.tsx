@@ -7,13 +7,8 @@ import {
   DragOverEvent,
   DragOverlay,
   DragStartEvent,
-  KeyboardSensor,
-  MouseSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
 } from '@dnd-kit/core';
-import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { arrayMove } from '@dnd-kit/sortable';
 import { DragEndEvent } from '@dnd-kit/core/dist/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { sortTask, updateTask } from '@/redux/states/task';
@@ -25,14 +20,6 @@ const Dashboard: React.FC = (): React.ReactElement => {
     getTaskGroupedByStatus(tasks)
   );
   const [activeTask, setActiveTask] = useState<Task | null>(null);
-
-  const sensors = useSensors(
-    useSensor(MouseSensor),
-    useSensor(TouchSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
 
   useEffect(() => {
     setListTask(getTaskGroupedByStatus(tasks));
@@ -53,17 +40,12 @@ const Dashboard: React.FC = (): React.ReactElement => {
       const activeContainer = active?.data?.current?.sortable?.containerId;
       const overContainer =
         over?.data?.current?.sortable?.containerId || over.id;
-
       activeContainer !== overContainer && moveBetweenContainers(overContainer);
     }
   };
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
-    if (!over) {
-      setActiveTask(null);
-      return;
-    }
-    if (active.id !== over.id) {
+    if (over && active.id !== over.id) {
       const activeContainer = active?.data?.current?.sortable.containerId;
       const overContainer =
         over?.data?.current?.sortable.containerId || over.id;
@@ -74,7 +56,7 @@ const Dashboard: React.FC = (): React.ReactElement => {
           : over?.data?.current?.sortable?.index;
 
       if (activeContainer === overContainer) {
-        const move: TasksByStatus = {
+        const sortByStatus: TasksByStatus = {
           ...listTask,
           [overContainer as StatusEnum]: arrayMove(
             listTask[overContainer as StatusEnum],
@@ -82,14 +64,15 @@ const Dashboard: React.FC = (): React.ReactElement => {
             overIndex
           ),
         };
-        const moveTest: Task[] = [
-          ...move[StatusEnum.Draft],
-          ...move[StatusEnum.Completed],
-          ...move[StatusEnum.Progress],
-          ...move[StatusEnum.Todo],
-        ];
-        setListTask(move);
-        dispatch(sortTask(moveTest));
+        setListTask(sortByStatus);
+        dispatch(
+          sortTask([
+            ...sortByStatus[StatusEnum.Draft],
+            ...sortByStatus[StatusEnum.Completed],
+            ...sortByStatus[StatusEnum.Progress],
+            ...sortByStatus[StatusEnum.Todo],
+          ])
+        );
       } else {
         moveBetweenContainers(overContainer);
       }
@@ -103,7 +86,6 @@ const Dashboard: React.FC = (): React.ReactElement => {
 
   return (
     <DndContext
-      sensors={sensors}
       onDragStart={handleDragStart}
       onDragCancel={handleDragCancel}
       onDragOver={handleDragOver}
