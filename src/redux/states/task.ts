@@ -26,7 +26,12 @@ export const taskSlice = createSlice({
       state.splice(index, 1);
       setLocalStorageTask(state);
     },
+    sortTask: (state, action: PayloadAction<Task[]>) => {
+      state.splice(0);
+      state.push(...action.payload);
+      setLocalStorageTask(state);
+    },
   },
 });
 
-export const { addTask, updateTask, removeTask } = taskSlice.actions;
+export const { addTask, updateTask, removeTask, sortTask } = taskSlice.actions;

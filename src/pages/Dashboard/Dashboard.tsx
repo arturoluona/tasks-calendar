@@ -15,9 +15,11 @@ import {
 } from '@dnd-kit/core';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { DragEndEvent } from '@dnd-kit/core/dist/types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { sortTask, updateTask } from '@/redux/states/task';
 
 const Dashboard: React.FC = (): React.ReactElement => {
+  const dispatch = useDispatch();
   const tasks: Task[] = useSelector((state: AppStore) => state.task);
   const [listTask, setListTask] = useState<TasksByStatus>(
     getTaskGroupedByStatus(tasks)
@@ -47,25 +49,13 @@ const Dashboard: React.FC = (): React.ReactElement => {
   const handleDragCancel = () => setActiveTask(null);
 
   const handleDragOver = ({ active, over }: DragOverEvent) => {
-    const overId = over?.id;
-    if (!overId) {
-      return;
-    }
-    const activeContainer = active?.data?.current?.sortable?.containerId;
-    const overContainer = over?.data?.current?.sortable?.containerId || over.id;
-    const activeIndex = active?.data?.current?.sortable?.index;
-    const overIndex =
-      over.id in listTask
-        ? listTask[overContainer as StatusEnum].length + 1
-        : over?.data?.current?.sortable?.index;
+    if (over?.id) {
+      const activeContainer = active?.data?.current?.sortable?.containerId;
+      const overContainer =
+        over?.data?.current?.sortable?.containerId || over.id;
 
-    activeContainer !== overContainer &&
-      moveBetweenContainers(
-        activeContainer,
-        activeIndex,
-        overContainer,
-        overIndex
-      );
+      activeContainer !== overContainer && moveBetweenContainers(overContainer);
+    }
   };
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
@@ -84,44 +74,31 @@ const Dashboard: React.FC = (): React.ReactElement => {
           : over?.data?.current?.sortable?.index;
 
       if (activeContainer === overContainer) {
-        setListTask({
+        const move: TasksByStatus = {
           ...listTask,
           [overContainer as StatusEnum]: arrayMove(
             listTask[overContainer as StatusEnum],
             activeIndex,
             overIndex
           ),
-        });
+        };
+        const moveTest: Task[] = [
+          ...move[StatusEnum.Draft],
+          ...move[StatusEnum.Completed],
+          ...move[StatusEnum.Progress],
+          ...move[StatusEnum.Todo],
+        ];
+        setListTask(move);
+        dispatch(sortTask(moveTest));
       } else {
-        moveBetweenContainers(
-          activeContainer,
-          activeIndex,
-          overContainer,
-          overIndex
-        );
+        moveBetweenContainers(overContainer);
       }
     }
     setActiveTask(null);
   };
 
-  const moveBetweenContainers = (
-    activeContainer: StatusEnum,
-    activeIndex: number,
-    overContainer: StatusEnum,
-    overId: number
-  ) => {
-    setListTask({
-      ...listTask,
-      [activeContainer]: [
-        ...listTask[activeContainer].slice(0, activeIndex),
-        ...listTask[activeContainer].slice(activeIndex + 1),
-      ],
-      [overContainer]: [
-        ...listTask[overContainer].slice(0, overId),
-        { ...activeTask, status: overContainer },
-        ...listTask[overContainer].slice(overId),
-      ],
-    });
+  const moveBetweenContainers = (overContainer: StatusEnum) => {
+    dispatch(updateTask({ ...activeTask, status: overContainer } as Task));
   };
 
   return (
