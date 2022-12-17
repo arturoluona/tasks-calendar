@@ -1,17 +1,14 @@
 import NavBar from '@/components/NavBar/NavBar';
-import ListTask from '@/components/Dashboard/ListTask/ListTask';
-import TaskCard from '@/components/Dashboard/TaskCard/TaskCard';
-import AddTaskBtnModal from '@/components/AddTaskBtnModal/AddTaskBtnModal';
-import ContentListTask from '@/components/Dashboard/ContentListTask/ContentListTask';
+import AddEditTaskModal from '@/components/AddEditTaskModal/AddEditTaskModal';
 import OptionsTask from '@/components/OptionsTask/OptionsTask';
 import OptionsStatus from '@/components/OptionsStatus/OptionsStatus';
+import OptionsPriority from '@/components/OptionsPriority/OptionsPriority';
 
+export * from '@/components/Dashboard';
 export {
   NavBar,
-  ListTask,
-  TaskCard,
-  AddTaskBtnModal,
-  ContentListTask,
+  AddEditTaskModal,
   OptionsTask,
   OptionsStatus,
+  OptionsPriority,
 };

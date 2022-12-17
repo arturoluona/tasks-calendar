@@ -4,13 +4,20 @@ import {
   FormControl,
   InputAdornment,
   Input,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { SearchRounded as SearchRoundedIcon } from '@mui/icons-material';
-import { AddTaskBtnModal } from '@/components';
+import {
+  AddCircleOutlineOutlined as AddCircleOutlineOutlinedIcon,
+  SearchRounded as SearchRoundedIcon,
+} from '@mui/icons-material';
+import { AddEditTaskModal } from '@/components';
 
 const NavBar = () => {
+  const [isOpenDialog, handleDialog] = useState(false);
+
   return (
     <>
       <AppBar position="static" className={'bg-blue-500'}>
@@ -44,7 +51,19 @@ const NavBar = () => {
                 }
               />
             </FormControl>
-            <AddTaskBtnModal />
+            <Tooltip title="Add new task">
+              <IconButton
+                aria-label="add task"
+                className="text-white"
+                onClick={() => handleDialog(true)}
+              >
+                <AddCircleOutlineOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <AddEditTaskModal
+              handleClose={() => handleDialog(false)}
+              isOpen={isOpenDialog}
+            />
           </div>
         </div>
       </AppBar>

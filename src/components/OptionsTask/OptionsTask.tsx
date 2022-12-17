@@ -1,17 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BasicCardProps } from '@/models';
 import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 import { MoreVert as MoreVertIcon } from '@mui/icons-material';
+import { useDispatch } from 'react-redux';
+import { removeTask } from '@/redux/states/task';
+import { AddEditTaskModal } from '@/components';
 
-const OptionsTask: React.FC<BasicCardProps> = (): React.ReactElement => {
+const OptionsTask: React.FC<BasicCardProps> = ({
+  task,
+}): React.ReactElement => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [isOpenDialog, handleDialog] = useState(false);
+  const dispatch = useDispatch();
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+
+  const handleClose = (): void => {
     setAnchorEl(null);
   };
+
+  const deleteTask = (): void => {
+    dispatch(removeTask(task.id));
+    handleClose();
+  };
+
   return (
     <>
       <Tooltip title="Options">
@@ -35,9 +50,14 @@ const OptionsTask: React.FC<BasicCardProps> = (): React.ReactElement => {
           'aria-labelledby': 'menu-settings',
         }}
       >
-        <MenuItem onClick={handleClose}>Edit</MenuItem>
-        <MenuItem onClick={handleClose}>Delete</MenuItem>
+        <MenuItem onClick={() => handleDialog(true)}>Edit</MenuItem>
+        <MenuItem onClick={deleteTask}>Delete</MenuItem>
       </Menu>
+      <AddEditTaskModal
+        isOpen={isOpenDialog}
+        handleClose={() => handleDialog(false)}
+        task={task}
+      />
     </>
   );
 };

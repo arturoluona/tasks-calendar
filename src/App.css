@@ -83,3 +83,15 @@
   border-radius: 5px;
   @apply bg-gray-300;
 }
+
+.MuiCardHeader-content {
+  @apply truncate;
+}
+
+.form-field {
+  margin-bottom: 1rem !important;
+}
+
+.form-field:first-child {
+  margin-top: .5rem;
+}

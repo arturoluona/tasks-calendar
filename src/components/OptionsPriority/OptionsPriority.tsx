@@ -1,12 +1,12 @@
 import React from 'react';
-import { BasicCardProps, StatusEnum } from '@/models';
+import { BasicCardProps, PriorityEnum } from '@/models';
 import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 import { getNameByEnum } from '@/utils';
-import { RadioButtonChecked as RadioButtonCheckedIcon } from '@mui/icons-material';
+import { Workspaces as WorkspacesIcon } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
 import { updateTask } from '@/redux/states/task';
 
-const OptionsStatus: React.FC<BasicCardProps> = ({
+const OptionsPriority: React.FC<BasicCardProps> = ({
   task,
 }): React.ReactElement => {
   const dispatch = useDispatch();
@@ -21,11 +21,11 @@ const OptionsStatus: React.FC<BasicCardProps> = ({
     setAnchorEl(null);
   };
 
-  const changeStatus = (status: StatusEnum): void => {
+  const changePriority = (priority: PriorityEnum): void => {
     dispatch(
       updateTask({
         ...task,
-        status,
+        priority,
       })
     );
     handleClose();
@@ -33,43 +33,43 @@ const OptionsStatus: React.FC<BasicCardProps> = ({
 
   return (
     <>
-      <Tooltip title={getNameByEnum(task.status)}>
+      <Tooltip title={getNameByEnum(task.priority)}>
         <IconButton
-          aria-label="status"
-          id="menu-status-btn"
-          aria-controls={open ? 'menu-status' : undefined}
+          aria-label="priority"
+          id="menu-priority-btn"
+          aria-controls={open ? 'menu-priority' : undefined}
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
-          className={'text-' + task.status}
+          className={'text-' + task.priority}
           onClick={handleClick}
         >
-          <RadioButtonCheckedIcon />
+          <WorkspacesIcon />
         </IconButton>
       </Tooltip>
       <Menu
-        id="menu-status"
+        id="menu-priority"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          'aria-labelledby': 'menu-status',
+          'aria-labelledby': 'menu-priority',
         }}
       >
-        <MenuItem onClick={() => changeStatus(StatusEnum.Draft)}>
-          {getNameByEnum(StatusEnum.Draft)}
+        <MenuItem onClick={() => changePriority(PriorityEnum.Low)}>
+          {getNameByEnum(PriorityEnum.Low)}
         </MenuItem>
-        <MenuItem onClick={() => changeStatus(StatusEnum.Todo)}>
-          {getNameByEnum(StatusEnum.Todo)}
+        <MenuItem onClick={() => changePriority(PriorityEnum.Normal)}>
+          {getNameByEnum(PriorityEnum.Normal)}
         </MenuItem>
-        <MenuItem onClick={() => changeStatus(StatusEnum.Progress)}>
-          {getNameByEnum(StatusEnum.Progress)}
+        <MenuItem onClick={() => changePriority(PriorityEnum.High)}>
+          {getNameByEnum(PriorityEnum.High)}
         </MenuItem>
-        <MenuItem onClick={() => changeStatus(StatusEnum.Completed)}>
-          {getNameByEnum(StatusEnum.Completed)}
+        <MenuItem onClick={() => changePriority(PriorityEnum.HighNext)}>
+          {getNameByEnum(PriorityEnum.HighNext)}
         </MenuItem>
       </Menu>
     </>
   );
 };
 
-export default OptionsStatus;
+export default OptionsPriority;

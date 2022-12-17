@@ -1,4 +1,4 @@
-import { PriorityEnum, StatusEnum, Task } from '@/models';
+import { PriorityEnum, StatusEnum, Task, TasksByStatus } from '@/models';
 
 const tasks: Task[] = [
   {
@@ -104,4 +104,25 @@ function getNameByEnum(enums: PriorityEnum | StatusEnum): string {
   return name[0].toUpperCase() + name.slice(1);
 }
 
-export { tasks, getNameByEnum };
+/**
+ * Group tasks by status.
+ *
+ * @param task The array of task to be parsed.
+ * @returns Tasks grouped.
+ */
+function getTaskGroupedByStatus(task: Task[]): TasksByStatus {
+  return {
+    [StatusEnum.Draft]: task.filter(
+      ({ status }) => status === StatusEnum.Draft
+    ),
+    [StatusEnum.Todo]: task.filter(({ status }) => status === StatusEnum.Todo),
+    [StatusEnum.Progress]: task.filter(
+      ({ status }) => status === StatusEnum.Progress
+    ),
+    [StatusEnum.Completed]: task.filter(
+      ({ status }) => status === StatusEnum.Completed
+    ),
+  };
+}
+
+export { tasks, getNameByEnum, getTaskGroupedByStatus };

@@ -1,4 +1,4 @@
-import { Task } from '@/models/task';
+import { Task } from '@/models';
 
 /** Interface props ContentListTask. */
 export interface ContentListTaskProps {

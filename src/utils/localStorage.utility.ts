@@ -14,9 +14,9 @@ export function getLocalStorageTask(): Task[] {
 /**
  * Set task to local storage.
  *
- * @param task The task to add to local storage.
+ * @param task Array of tasks to add to local storage.
  */
-export function setLocalStorageTask(task: Task): void {
-  const tasks: string = JSON.stringify([...getLocalStorageTask(), task]);
+export function setLocalStorageTask(task: Task[]): void {
+  const tasks: string = JSON.stringify(task);
   localStorage.setItem('task', tasks);
 }

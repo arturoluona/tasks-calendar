@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ListTask, TaskCard } from '@/components';
-import { tasks } from '@/utils';
-import { StatusEnum, Task, TasksByStatus } from '@/models';
+import { getTaskGroupedByStatus } from '@/utils';
+import { AppStore, StatusEnum, Task, TasksByStatus } from '@/models';
 import {
   DndContext,
   DragOverEvent,
@@ -15,14 +15,13 @@ import {
 } from '@dnd-kit/core';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { DragEndEvent } from '@dnd-kit/core/dist/types';
+import { useSelector } from 'react-redux';
 
 const Dashboard: React.FC = (): React.ReactElement => {
-  const [listTask, setListTask] = useState<TasksByStatus>({
-    [StatusEnum.Draft]: [],
-    [StatusEnum.Todo]: [],
-    [StatusEnum.Progress]: [],
-    [StatusEnum.Completed]: [],
-  });
+  const tasks: Task[] = useSelector((state: AppStore) => state.task);
+  const [listTask, setListTask] = useState<TasksByStatus>(
+    getTaskGroupedByStatus(tasks)
+  );
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const sensors = useSensors(
@@ -33,25 +32,8 @@ const Dashboard: React.FC = (): React.ReactElement => {
     })
   );
 
-  const setParsedTasks = () => {
-    setListTask({
-      [StatusEnum.Draft]: tasks.filter(
-        (task) => task.status === StatusEnum.Draft
-      ),
-      [StatusEnum.Todo]: tasks.filter(
-        (task) => task.status === StatusEnum.Todo
-      ),
-      [StatusEnum.Progress]: tasks.filter(
-        (task) => task.status === StatusEnum.Progress
-      ),
-      [StatusEnum.Completed]: tasks.filter(
-        (task) => task.status === StatusEnum.Completed
-      ),
-    });
-  };
-
   useEffect(() => {
-    setParsedTasks();
+    setListTask(getTaskGroupedByStatus(tasks));
   }, [tasks]);
 
   const handleDragStart = ({ active }: DragStartEvent) => {

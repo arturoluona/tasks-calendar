@@ -12,14 +12,14 @@ import React from 'react';
 import {
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
-  Workspaces as WorkspacesIcon,
   ZoomOutMap as ZoomOutMapIcon,
 } from '@mui/icons-material';
 import { BasicCardProps } from '@/models';
-import { getNameByEnum, shortDate } from '@/utils';
+import { shortDate } from '@/utils';
 import { OptionsTask, OptionsStatus } from '@/components';
 import { CSS } from '@dnd-kit/utilities';
 import { useSortable } from '@dnd-kit/sortable';
+import OptionsPriority from '../../OptionsPriority/OptionsPriority';
 
 const TaskCard: React.FC<BasicCardProps> = ({ task }): React.ReactElement => {
   const [isShowMore, setShowMore] = React.useState<boolean>(false);
@@ -64,11 +64,15 @@ const TaskCard: React.FC<BasicCardProps> = ({ task }): React.ReactElement => {
         }
         action={<OptionsTask task={task} />}
         className="pb-0 truncate"
-        title={task.name}
+        title={
+          <Tooltip title={task.name} placement="top">
+            <p className="truncate">{task.name}</p>
+          </Tooltip>
+        }
         subheader={
-          <span className="text-xs w-[20px] truncate">
-            {shortDate(task.date as string)}
-          </span>
+          <Tooltip title={shortDate(task.date as string)}>
+            <p className="text-xs truncate">{shortDate(task.date as string)}</p>
+          </Tooltip>
         }
       />
       <CardContent className="pb-0">
@@ -84,14 +88,7 @@ const TaskCard: React.FC<BasicCardProps> = ({ task }): React.ReactElement => {
         <div className="flex justify-between items-center w-full">
           <div>
             <OptionsStatus task={task} />
-            <Tooltip title={getNameByEnum(task.priority)}>
-              <IconButton
-                aria-label="priority"
-                className={'ml-2 text-' + task.priority}
-              >
-                <WorkspacesIcon />
-              </IconButton>
-            </Tooltip>
+            <OptionsPriority task={task} />
           </div>
           <div className="flex ">
             <div className="hidden sm:block">
