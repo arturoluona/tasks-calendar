@@ -1,4 +1,4 @@
-import { createSlice, current, nanoid, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
 import { getLocalStorageTask, setLocalStorageTask } from '@/utils';
 import { Task } from '@/models';
 
