@@ -16,14 +16,23 @@ import {
 import { AddEditTaskModal } from '@/components';
 import { searchTask } from '@/utils';
 
+/**
+ * Component NavBar.
+ *
+ * @returns React element NavBar.
+ */
 const NavBar = () => {
   const [isOpenDialog, handleDialog] = useState(false);
 
+  /**
+   * Emit search.
+   *
+   * @param event Input event.
+   */
   const searchTasks = (
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
-    const search: string = event.currentTarget.value;
-    searchTask(search || '');
+    searchTask(event.currentTarget.value || '');
   };
 
   return (
@@ -37,12 +46,12 @@ const NavBar = () => {
             >
               <Link to="/">Home</Link>
             </Button>
-            <Button
-              variant="text"
-              className="text-white font-semibold normal-case text-base flex items-center"
-            >
-              <Link to="/calendar">Calendar</Link>
-            </Button>
+            {/*<Button*/}
+            {/*  variant="text"*/}
+            {/*  className="text-white font-semibold normal-case text-base flex items-center"*/}
+            {/*>*/}
+            {/*  <Link to="/calendar">Calendar</Link>*/}
+            {/*</Button>*/}
           </div>
 
           <div className="flex items-center gap-3">

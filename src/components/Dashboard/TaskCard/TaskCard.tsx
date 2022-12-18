@@ -15,13 +15,20 @@ import {
   ZoomOutMap as ZoomOutMapIcon,
 } from '@mui/icons-material';
 import { BasicCardProps } from '@/models';
-import { shortDate } from '@/utils';
+import { getInitials, shortDate } from '@/utils';
 import { OptionsTask, OptionsStatus, OptionsPriority } from '@/components';
 import { CSS } from '@dnd-kit/utilities';
 import { useSortable } from '@dnd-kit/sortable';
 
+/**
+ * Component card of the task.
+ *
+ * @param prop BasicCardProps interface.
+ * @param prop.task Task to render.
+ * @returns React element component TaskCard.
+ */
 const TaskCard: React.FC<BasicCardProps> = ({ task }): React.ReactElement => {
-  const [isShowMore, setShowMore] = React.useState<boolean>(false);
+  const [isShowMore, setShowMore] = React.useState(false);
   const {
     attributes,
     listeners,
@@ -39,7 +46,7 @@ const TaskCard: React.FC<BasicCardProps> = ({ task }): React.ReactElement => {
   };
 
   /** Show or hide description. */
-  const toggleExpandClick = () => {
+  const toggleExpandClick = (): void => {
     setShowMore(!isShowMore);
   };
 
@@ -48,10 +55,7 @@ const TaskCard: React.FC<BasicCardProps> = ({ task }): React.ReactElement => {
    *
    * @returns String with name of enum.
    */
-  function getInitialsAvatar(): string {
-    const name = task.name.split(' ');
-    return (name[0][0] + (name[1] ? name[1][0] : '')).toUpperCase();
-  }
+  const getInitialsAvatar = (): string => getInitials(task.name);
 
   return (
     <Card className="border" style={style} ref={setNodeRef} {...attributes}>

@@ -71,15 +71,11 @@ module.exports = {
           {
             publicOnly: false,
             require: {
-              ClassDeclaration: true,
               FunctionDeclaration: true,
+              ArrowFunctionExpression: true,
               MethodDefinition: true,
             },
             contexts: [
-              {
-                context: 'ClassProperty',
-                inlineCommentBlock: true,
-              },
               {
                 context: 'TSPropertySignature',
                 inlineCommentBlock: true,

@@ -6,6 +6,13 @@ import { RadioButtonChecked as RadioButtonCheckedIcon } from '@mui/icons-materia
 import { useDispatch } from 'react-redux';
 import { updateTask } from '@/redux/states/task';
 
+/**
+ * Component menu options status.
+ *
+ * @param prop BasicCardProps interface.
+ * @param prop.task Task to change status.
+ * @returns React element OptionsStatus.
+ */
 const OptionsStatus: React.FC<BasicCardProps> = ({
   task,
 }): React.ReactElement => {
@@ -13,14 +20,25 @@ const OptionsStatus: React.FC<BasicCardProps> = ({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
+  /**
+   * Open menu status.
+   *
+   * @param event Element to open.
+   */
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
   };
 
+  /** Close menu. */
   const handleClose = (): void => {
     setAnchorEl(null);
   };
 
+  /**
+   * Change status of task from action store.
+   *
+   * @param status Selected status to change.
+   */
   const changeStatus = (status: StatusEnum): void => {
     dispatch(
       updateTask({

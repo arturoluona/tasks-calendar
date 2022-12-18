@@ -21,12 +21,22 @@ import dayjs from 'dayjs';
 import { useDispatch } from 'react-redux';
 import { addTask, updateTask } from '@/redux/states/task';
 import { TaskModalProps } from '@/models/task-modal-props';
+import { FormikValues } from 'formik/dist/types';
 
 const validationSchema = yup.object({
   name: yup.string().required('Title is required'),
   description: yup.string().required('Description is required'),
 });
 
+/**
+ * Component modal to edit or add new task.
+ *
+ * @param prop TaskModalProps interface.
+ * @param prop.isOpen Is open or close the dialog.
+ * @param prop.task Task optional to edit.
+ * @param prop.handleClose Handle close dialog.
+ * @returns React element component AddEditTaskModal.
+ */
 const AddEditTaskModal: React.FC<TaskModalProps> = ({
   isOpen,
   task,
@@ -34,12 +44,22 @@ const AddEditTaskModal: React.FC<TaskModalProps> = ({
 }): React.ReactElement => {
   const dispatch = useDispatch();
 
-  const saveTask = (valueTask: Task) => {
+  /**
+   * Save task, toggle edit or add new.
+   *
+   * @param valueTask Values of task to save.
+   */
+  const saveTask = (valueTask: Task): void => {
     task && task.id ? editTask(valueTask) : addNewTask(valueTask);
     closeDialog();
   };
 
-  const addNewTask = (valueTask: Task) => {
+  /**
+   * Add new task from action store.
+   *
+   * @param valueTask Values of task to save.
+   */
+  const addNewTask = (valueTask: Task): void => {
     dispatch(
       addTask({
         ...valueTask,
@@ -48,7 +68,12 @@ const AddEditTaskModal: React.FC<TaskModalProps> = ({
     );
   };
 
-  const editTask = (valueTask: Task) => {
+  /**
+   * Edit task from action store.
+   *
+   * @param valueTask Values of task to save.
+   */
+  const editTask = (valueTask: Task): void => {
     dispatch(
       updateTask({
         ...valueTask,
@@ -58,7 +83,7 @@ const AddEditTaskModal: React.FC<TaskModalProps> = ({
     );
   };
 
-  const formik = useFormik({
+  const formik: FormikValues = useFormik({
     initialValues: {
       name: task?.name || '',
       description: task?.description || '',
@@ -71,7 +96,7 @@ const AddEditTaskModal: React.FC<TaskModalProps> = ({
   });
 
   /** Toggle hide or show modal. */
-  const closeDialog = () => {
+  const closeDialog = (): void => {
     formik.resetForm();
     handleClose();
   };

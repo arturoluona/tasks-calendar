@@ -2,6 +2,13 @@ import React from 'react';
 import { ContentListTaskProps } from '@/models';
 import { TaskCard } from '@/components';
 
+/**
+ * Component to contain list of tasks.
+ *
+ * @param prop ContentListTaskProps interface.
+ * @param prop.tasks Tasks to list.
+ * @returns React element component ContentListTask.
+ */
 const ContentListTask: React.FC<ContentListTaskProps> = ({
   tasks,
 }): React.ReactElement => {

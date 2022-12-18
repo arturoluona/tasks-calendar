@@ -6,6 +6,11 @@ import { NavBar } from '@/components';
 import store from '@/redux/store';
 import './App.css';
 
+/**
+ * Initial component.
+ *
+ * @returns React element App.
+ */
 const App = () => {
   return (
     <Provider store={store}>

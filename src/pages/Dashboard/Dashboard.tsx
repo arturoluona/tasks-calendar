@@ -13,6 +13,11 @@ import { DragEndEvent } from '@dnd-kit/core/dist/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { sortTask, updateTask } from '@/redux/states/task';
 
+/**
+ * Dashboard page.
+ *
+ * @returns React element Dashboard.
+ */
 const Dashboard: React.FC = (): React.ReactElement => {
   const dispatch = useDispatch();
   const tasks: Task[] = useSelector((state: AppStore) => state.task);
@@ -30,12 +35,21 @@ const Dashboard: React.FC = (): React.ReactElement => {
     subscribeSearchTask$();
   }, []);
 
+  /**
+   * Subscribe to search tasks.
+   */
   const subscribeSearchTask$ = (): void => {
     searchTask$.subscribe((searchS) => {
       setSearch(searchS);
     });
   };
 
+  /**
+   * Start Drag and Drop.
+   *
+   * @param param DragStartEvent interface.
+   * @param param.active Active element.
+   */
   const handleDragStart = ({ active }: DragStartEvent): void => {
     const activeContainer = active?.data?.current?.sortable?.containerId;
     const task: Task | undefined = listTask[activeContainer as StatusEnum].find(
@@ -44,8 +58,20 @@ const Dashboard: React.FC = (): React.ReactElement => {
     task && setActiveTask(task);
   };
 
-  const handleDragCancel = (): void => setActiveTask(null);
+  /**
+   * Cancel Drag and Drop.
+   */
+  const handleDragCancel = (): void => {
+    setActiveTask(null);
+  };
 
+  /**
+   * While make Drag and Drop.
+   *
+   * @param param DragStartEvent interface.
+   * @param param.active Active element.
+   * @param param.over Over element.
+   */
   const handleDragOver = ({ active, over }: DragOverEvent): void => {
     if (over?.id) {
       const activeContainer = active?.data?.current?.sortable?.containerId;
@@ -55,6 +81,13 @@ const Dashboard: React.FC = (): React.ReactElement => {
     }
   };
 
+  /**
+   * End Drag and Drop (Sort or move task between containers).
+   *
+   * @param param DragStartEvent interface.
+   * @param param.active Active element.
+   * @param param.over Over element.
+   */
   const handleDragEnd = ({ active, over }: DragEndEvent): void => {
     if (over && active.id !== over.id) {
       const activeContainer = active?.data?.current?.sortable.containerId;
@@ -91,6 +124,11 @@ const Dashboard: React.FC = (): React.ReactElement => {
     setActiveTask(null);
   };
 
+  /**
+   * Move task between containers from action store.
+   *
+   * @param overContainer Container moved.
+   */
   const moveBetweenContainers = (overContainer: StatusEnum): void => {
     dispatch(updateTask({ ...activeTask, status: overContainer } as Task));
   };

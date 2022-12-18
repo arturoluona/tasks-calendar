@@ -6,6 +6,13 @@ import { Workspaces as WorkspacesIcon } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
 import { updateTask } from '@/redux/states/task';
 
+/**
+ * Component menu options priority.
+ *
+ * @param prop BasicCardProps interface.
+ * @param prop.task Task to change priority.
+ * @returns React element OptionsPriority.
+ */
 const OptionsPriority: React.FC<BasicCardProps> = ({
   task,
 }): React.ReactElement => {
@@ -13,14 +20,25 @@ const OptionsPriority: React.FC<BasicCardProps> = ({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
+  /**
+   * Open menu priority.
+   *
+   * @param event Element to open.
+   */
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
   };
 
+  /** Close menu. */
   const handleClose = (): void => {
     setAnchorEl(null);
   };
 
+  /**
+   * Change priority of task from action store.
+   *
+   * @param priority Selected priority to change.
+   */
   const changePriority = (priority: PriorityEnum): void => {
     dispatch(
       updateTask({

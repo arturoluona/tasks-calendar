@@ -10,6 +10,14 @@ import {
 import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
 
+/**
+ * Component banner vertical of list task.
+ *
+ * @param prop ListTaskProps interface.
+ * @param prop.tasks Task to list.
+ * @param prop.status Status of the banner.
+ * @returns React element component ListTask.
+ */
 const ListTask: React.FC<ListTaskProps> = ({
   tasks,
   status,
@@ -18,7 +26,7 @@ const ListTask: React.FC<ListTaskProps> = ({
   const [isExpanded, setExpanded] = useState(false);
 
   /** Toggle expand list tasks only for mobile. */
-  const toggleListMobile = () => {
+  const toggleListMobile = (): void => {
     setExpanded(!isExpanded);
   };
 

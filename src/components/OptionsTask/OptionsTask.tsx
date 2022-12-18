@@ -6,6 +6,13 @@ import { useDispatch } from 'react-redux';
 import { removeTask } from '@/redux/states/task';
 import { AddEditTaskModal } from '@/components';
 
+/**
+ * Component menu options task.
+ *
+ * @param prop BasicCardProps interface.
+ * @param prop.task Task to edit or delete.
+ * @returns React element OptionsTask.
+ */
 const OptionsTask: React.FC<BasicCardProps> = ({
   task,
 }): React.ReactElement => {
@@ -14,14 +21,21 @@ const OptionsTask: React.FC<BasicCardProps> = ({
   const dispatch = useDispatch();
   const open = Boolean(anchorEl);
 
+  /**
+   * Open menu options task.
+   *
+   * @param event Element to open.
+   */
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
   };
 
+  /** Close menu. */
   const handleClose = (): void => {
     setAnchorEl(null);
   };
 
+  /** Delete task from action store. */
   const deleteTask = (): void => {
     dispatch(removeTask(task.id));
     handleClose();
