@@ -16,10 +16,9 @@ import {
 } from '@mui/icons-material';
 import { BasicCardProps } from '@/models';
 import { shortDate } from '@/utils';
-import { OptionsTask, OptionsStatus } from '@/components';
+import { OptionsTask, OptionsStatus, OptionsPriority } from '@/components';
 import { CSS } from '@dnd-kit/utilities';
 import { useSortable } from '@dnd-kit/sortable';
-import OptionsPriority from '../../OptionsPriority/OptionsPriority';
 
 const TaskCard: React.FC<BasicCardProps> = ({ task }): React.ReactElement => {
   const [isShowMore, setShowMore] = React.useState<boolean>(false);

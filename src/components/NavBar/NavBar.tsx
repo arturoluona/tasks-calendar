@@ -14,9 +14,17 @@ import {
   SearchRounded as SearchRoundedIcon,
 } from '@mui/icons-material';
 import { AddEditTaskModal } from '@/components';
+import { searchTask } from '@/utils';
 
 const NavBar = () => {
   const [isOpenDialog, handleDialog] = useState(false);
+
+  const searchTasks = (
+    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
+    const search: string = event.currentTarget.value;
+    searchTask(search || '');
+  };
 
   return (
     <>
@@ -44,6 +52,7 @@ const NavBar = () => {
                   'text-gray-50 border-none after:border-none before:border-none'
                 }
                 placeholder="Search.."
+                onChange={searchTasks}
                 startAdornment={
                   <InputAdornment position="start" className={'pl-2'}>
                     <SearchRoundedIcon className={'text-white'} />

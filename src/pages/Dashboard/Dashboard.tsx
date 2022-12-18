@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { ListTask, TaskCard } from '@/components';
-import { getTaskGroupedByStatus } from '@/utils';
+import { getTaskGroupedByStatusAndSearch, searchTask$ } from '@/utils';
 import { AppStore, StatusEnum, Task, TasksByStatus } from '@/models';
 import {
   DndContext,
-  DragOverEvent,
   DragOverlay,
+  DragOverEvent,
   DragStartEvent,
 } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
@@ -17,15 +17,26 @@ const Dashboard: React.FC = (): React.ReactElement => {
   const dispatch = useDispatch();
   const tasks: Task[] = useSelector((state: AppStore) => state.task);
   const [listTask, setListTask] = useState<TasksByStatus>(
-    getTaskGroupedByStatus(tasks)
+    getTaskGroupedByStatusAndSearch(tasks)
   );
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
-    setListTask(getTaskGroupedByStatus(tasks));
-  }, [tasks]);
+    setListTask(getTaskGroupedByStatusAndSearch(tasks, search));
+  }, [tasks, search]);
 
-  const handleDragStart = ({ active }: DragStartEvent) => {
+  useEffect(() => {
+    subscribeSearchTask$();
+  }, []);
+
+  const subscribeSearchTask$ = (): void => {
+    searchTask$.subscribe((searchS) => {
+      setSearch(searchS);
+    });
+  };
+
+  const handleDragStart = ({ active }: DragStartEvent): void => {
     const activeContainer = active?.data?.current?.sortable?.containerId;
     const task: Task | undefined = listTask[activeContainer as StatusEnum].find(
       ({ id }) => id === active.id
@@ -33,9 +44,9 @@ const Dashboard: React.FC = (): React.ReactElement => {
     task && setActiveTask(task);
   };
 
-  const handleDragCancel = () => setActiveTask(null);
+  const handleDragCancel = (): void => setActiveTask(null);
 
-  const handleDragOver = ({ active, over }: DragOverEvent) => {
+  const handleDragOver = ({ active, over }: DragOverEvent): void => {
     if (over?.id) {
       const activeContainer = active?.data?.current?.sortable?.containerId;
       const overContainer =
@@ -44,7 +55,7 @@ const Dashboard: React.FC = (): React.ReactElement => {
     }
   };
 
-  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+  const handleDragEnd = ({ active, over }: DragEndEvent): void => {
     if (over && active.id !== over.id) {
       const activeContainer = active?.data?.current?.sortable.containerId;
       const overContainer =
@@ -80,7 +91,7 @@ const Dashboard: React.FC = (): React.ReactElement => {
     setActiveTask(null);
   };
 
-  const moveBetweenContainers = (overContainer: StatusEnum) => {
+  const moveBetweenContainers = (overContainer: StatusEnum): void => {
     dispatch(updateTask({ ...activeTask, status: overContainer } as Task));
   };
 
