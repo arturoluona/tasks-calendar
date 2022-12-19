@@ -6,7 +6,7 @@
 
   --normal: #0ea5e9;
   --low: #eab308;
-  --high: #f43f5e;
+  --high: #7900ff;
   --high-next: #ef4444;
 }
 
@@ -63,4 +63,35 @@
 
 .bg-completed {
   background-color: var(--completed) !important;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  @apply bg-transparent;
+}
+
+.scrollbar:hover::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  @apply bg-gray-300;
+}
+
+.MuiCardHeader-content {
+  @apply truncate;
+}
+
+.form-field {
+  margin-bottom: 1rem !important;
+}
+
+.form-field:first-child {
+  margin-top: 0.5rem;
 }

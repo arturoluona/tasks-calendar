@@ -1,5 +1,14 @@
 import NavBar from '@/components/NavBar/NavBar';
-import ListTask from '@/components/ListTask/ListTask';
-import TaskCard from '@/components/TaskCard/TaskCard';
+import AddEditTaskModal from '@/components/AddEditTaskModal/AddEditTaskModal';
+import OptionsTask from '@/components/OptionsTask/OptionsTask';
+import OptionsStatus from '@/components/OptionsStatus/OptionsStatus';
+import OptionsPriority from '@/components/OptionsPriority/OptionsPriority';
 
-export { NavBar, ListTask, TaskCard };
+export * from '@/components/Dashboard';
+export {
+  NavBar,
+  AddEditTaskModal,
+  OptionsTask,
+  OptionsStatus,
+  OptionsPriority,
+};
