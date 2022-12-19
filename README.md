@@ -12,15 +12,15 @@ You can run the web app by using the command `npm run dev` and opening Google Ch
 
 ### Add task
 
-<img src="https://user-images.githubusercontent.com/56488686/208325146-600f9023-7ead-49b4-bb42-3ff1ade056eb.png" width="400">
+<img src="https://user-images.githubusercontent.com/56488686/208325146-600f9023-7ead-49b4-bb42-3ff1ade056eb.png" width="650">
 
 ### Move task between status container
 
-<img src="https://user-images.githubusercontent.com/56488686/208325333-0de42e0a-f699-42a8-b73c-c39d06386c37.png" width="400">
+<img src="https://user-images.githubusercontent.com/56488686/208325333-0de42e0a-f699-42a8-b73c-c39d06386c37.png" width="650">
 
 ### Mobile design
 
-<img src="https://user-images.githubusercontent.com/56488686/208325571-d7d79522-3939-4010-87b0-2d6594a4eca2.png" width="200" style="border-radius: 30px">
+<img src="https://user-images.githubusercontent.com/56488686/208325571-d7d79522-3939-4010-87b0-2d6594a4eca2.png" width="300" style="border-radius: 30px">
 
 ## Tools
 
@@ -39,6 +39,9 @@ Runs the web app locally on your system.
 
 `npm run build`\
 Builds the app to the `/dist`.
+
+`npm run preview`\
+Preview app after build.
 
 `npm run format`\
 Formats all the files in the project using Prettier.
